@@ -21,15 +21,13 @@ public class MemoOpenHelper extends SQLiteOpenHelper {
                     "updated datetime default current_timestamp, ";
 
     public static final String INIT_TABLE =
-            "intert into memos (title, body) values " +
+            "insert into memos (title, body) values " +
                     "('t1', 'b1'), " +
                     "('t2', 'b2'), " +
                     "('t3', 'b3'), ";
 
     public static final String DROP_TABLE =
-            "drop table if exists " + MemoContract.memos.TABLE_NAME
-
-
+            "drop table if exists " + MemoContract.Memos.TABLE_NAME;
 
     public MemoOpenHelper(Context c){
         super(c, DB_NAME, null, DB_VERSION);
@@ -43,6 +41,7 @@ public class MemoOpenHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
+         db.execSQL(DROP_TABLE);
+         onCreate(db);
     }
 }
