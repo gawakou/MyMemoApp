@@ -4,6 +4,7 @@ import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 
 public class MemoContentProvider extends ContentProvider {
@@ -23,7 +24,9 @@ public class MemoContentProvider extends ContentProvider {
         uriMatcher.addURI(AUTHORITY, MemoContract.Memos.TABLE_NAME, MEMOS);
         uriMatcher.addURI(AUTHORITY, MemoContract.Memos.TABLE_NAME+ "/#", MEMO_ITEM);
     }
-    
+
+    private MemoOpenHelper memoOpenHelper;
+
     public MemoContentProvider() {
     }
 
@@ -49,14 +52,37 @@ public class MemoContentProvider extends ContentProvider {
     @Override
     public boolean onCreate() {
         // TODO: Implement this to initialize your content provider on startup.
-        return false;
+        memoOpenHelper = new MemoOpenHelper(getContext());
+        return true;
     }
 
     @Override
-    public Cursor query(Uri uri, String[] projection, String selection,
-                        String[] selectionArgs, String sortOrder) {
+    public Cursor query(
+            Uri uri,
+            String[] projection,
+            String selection,
+            String[] selectionArgs,
+            String sortOrder
+    ) {
         // TODO: Implement this to handle query requests from clients.
-        throw new UnsupportedOperationException("Not yet implemented");
+        switch (uriMatcher.match(uri)){
+            case MEMOS:
+            case MEMO_ITEM:
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid URI" + uri);
+        }
+        SQLiteDatabase db = memoOpenHelper.getReadableDatabase();
+        Cursor c = db.query(
+                MemoContract.Memos.TABLE_NAME,
+                projection,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                sortOrder
+        );
+        return c;
     }
 
     @Override
