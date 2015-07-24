@@ -19,7 +19,7 @@
 
         <provider
             android:name=".MemoContentProvider"
-            android:authorities="com.example.ogawa.mymemoapp"
+            android:authorities="com.example.ogawa.mymemoapp.MemoContentProvider"
             android:enabled="true"
             android:exported="false" >
         </provider>
